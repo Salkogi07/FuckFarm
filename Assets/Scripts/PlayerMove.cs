@@ -9,10 +9,10 @@ public class PlayerMove : MonoBehaviour
     public LayerMask groundLayer;
 
     private Rigidbody rb;
-    private Animator animator;
+    public Animator animator;
 
-    private Vector3 targetPositon;
-    private bool hasTarget = false;
+    public Vector3 targetPositon;
+    public bool hasTarget = false;
 
     private void Awake()
     {

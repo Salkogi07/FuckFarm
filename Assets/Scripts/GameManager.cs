@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        health = maxHealth;
+        health = 0;
     }
 
     private void Update()

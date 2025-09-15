@@ -17,6 +17,7 @@ public class WeatherManager : MonoBehaviour
     public GameObject[] weatherEffect;
     public WeatherState currentWeather;
     public Light light;
+    public Terrain terrain;
 
     private void Awake()
     {
@@ -54,6 +55,9 @@ public class WeatherManager : MonoBehaviour
             effect.SetActive(false);
         }
         RenderSettings.fog = false;
+        terrain.terrainData.wavingGrassStrength = .5f;
+        terrain.terrainData.wavingGrassAmount = .5f;
+        terrain.terrainData.wavingGrassSpeed = .5f;
     }
 
     public void ApplyWeather()
@@ -79,6 +83,9 @@ public class WeatherManager : MonoBehaviour
             case WeatherState.Storm:
                 UIManager.instance.SetWeatherUI("ÆøÇ³");
                 light.intensity = 0.5f;
+                terrain.terrainData.wavingGrassStrength = 1f;
+                terrain.terrainData.wavingGrassAmount = 1f;
+                terrain.terrainData.wavingGrassSpeed = 1f;
                 weatherEffect[1].SetActive(true);
                 break;
             case WeatherState.Ice:
