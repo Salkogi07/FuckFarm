@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -51,7 +50,7 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.F4))
         {
-
+            currentTime += 10;
         }
         if (Input.GetKeyDown(KeyCode.F5))
         {
@@ -67,7 +66,10 @@ public class GameManager : MonoBehaviour
         {
             currentTime -= gameDayTime;
             day++;
-            WeatherManager.instance.SetRandomWeather();
+            WeatherManager weather = WeatherManager.instance;
+            weather.currentWeather = weather.nextWeather;
+            weather.nextWeather = weather.SetRandomWeather();
+            weather.ApplyWeather();
         }
 
         float timeRatio = currentTime / gameDayTime;

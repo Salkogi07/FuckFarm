@@ -16,6 +16,7 @@ public class WeatherManager : MonoBehaviour
     public static WeatherManager instance;
     public GameObject[] weatherEffect;
     public WeatherState currentWeather;
+    public WeatherState nextWeather;
     public Light light;
     public Terrain terrain;
 
@@ -26,17 +27,20 @@ public class WeatherManager : MonoBehaviour
 
     private void Start()
     {
-        SetRandomWeather();
+        currentWeather = SetRandomWeather();
+        ApplyWeather();
+
+        nextWeather = SetRandomWeather();
     }
 
-    public void SetRandomWeather()
+    public WeatherState SetRandomWeather()
     {
         int weatherCount = System.Enum.GetNames(typeof(WeatherState)).Length;
         int randomValue = Random.Range(0, weatherCount);
 
-        currentWeather = (WeatherState)randomValue;
+        WeatherState value = (WeatherState)randomValue;
 
-        ApplyWeather();
+        return value;
     }
 
     public void SetNextWeather()
@@ -49,7 +53,6 @@ public class WeatherManager : MonoBehaviour
 
     private void DeactivateAllEffects()
     {
-
         foreach (GameObject effect in weatherEffect)
         {
             effect.SetActive(false);
