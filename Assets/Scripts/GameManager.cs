@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public float health = 0;
+    public float bufferHealth = 0;
     public float maxHealth = 100;
     public float money = 3000;
 
@@ -76,5 +77,11 @@ public class GameManager : MonoBehaviour
 
         hour = (int)(timeRatio * 24);
         minute = (int)(((timeRatio * 24) - hour) * 60);
+    }
+
+    public void AddHealth(float value)
+    {
+        health += value;
+        health = Mathf.Clamp(health, 0, maxHealth);
     }
 }
