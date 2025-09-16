@@ -90,5 +90,6 @@ public class UIManager : MonoBehaviour
     IEnumerator WaitClose(GameObject obj)
     {
         yield return new WaitForSeconds(1.5f);
+        obj.SetActive(false);
     }
 }

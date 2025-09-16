@@ -1,14 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Serializable]
+public class Item
+{
+    public CropData data;
+    public bool IsSeed = false;
+
+    public Item(CropData data , bool value)
+    {
+        this.data = data;
+        this.IsSeed = value;
+    }
+}
+
 public class CropInventory : MonoBehaviour
 {
-    public Image image;
-    public Text text;
-
-    private List<CropData> inventory = new List<CropData>();
+    public List<Item> inventory = new List<Item>();
     private int maxInventorySlots = 20;
 
     private float itemCooldown = .5f;
@@ -18,8 +29,11 @@ public class CropInventory : MonoBehaviour
 
     public Farm currentFarm;
 
-    public CropData[] startItem;
+    public Item[] startItem;
 
+    [Header("UI")]
+    public Image image;
+    public Text text;
 
     private void Start()
     {
@@ -68,7 +82,7 @@ public class CropInventory : MonoBehaviour
         UpdateUI();
     }
 
-    public void AddItem(CropData newItem)
+    public void AddItem(Item newItem)
     {
         if (inventory.Count < maxInventorySlots)
         {
@@ -79,21 +93,22 @@ public class CropInventory : MonoBehaviour
     void UseItem()
     {
         if (inventory.Count == 0)
-        {
             return;
-        }
 
         Effect();
-
-        select = 0;
-
-        currentCooldown = itemCooldown;
     }
 
     public void Effect()
     {
-        currentFarm.PlantSeed(inventory[select]);
+        if (!inventory[select].IsSeed)
+            return;
+
+        if (!currentFarm.PlantSeed(inventory[select].data))
+            return;
+
         inventory.RemoveAt(select);
+        select = 0;
+        currentCooldown = itemCooldown;
     }
 
     void UpdateUI()
@@ -101,7 +116,11 @@ public class CropInventory : MonoBehaviour
         if (inventory.Count == 0)
             text.text = string.Empty;
         else
-            text.text = inventory[select].seedType.ToString();
+        {
+            text.text = inventory[select].data.seedType.ToString();
+            if (inventory[select].IsSeed)
+                text.text += "¾¾¾Ñ";
+        }
     }
 
     private void OnTriggerStay(Collider other)

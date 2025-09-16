@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FarmTile : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class FarmTile : MonoBehaviour
 
     [Header("¹çµé")]
     public Farm[] farms = new Farm[9];
+
+    [Header("UI")]
+    public Image image;
 
     void Start()
     {
@@ -23,6 +27,8 @@ public class FarmTile : MonoBehaviour
 
     void Update()
     {
+        image.fillAmount = humidity / 100;
+
         if (Time.time % 5f < Time.deltaTime)
         {
             switch (WeatherManager.instance.currentWeather)
@@ -62,7 +68,9 @@ public class FarmTile : MonoBehaviour
 
     private void RandomDestoryCrop()
     {
-        if(Random.value < 2)
+        int value = Random.Range(0, 100);
+
+        if(value < 2)
         {
             List<Farm> plantedFarms = new List<Farm>();
 

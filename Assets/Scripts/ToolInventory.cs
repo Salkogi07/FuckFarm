@@ -15,7 +15,7 @@ public class ToolInventory : MonoBehaviour
     public Image image;
     public Text text;
 
-    private List<Tool> inventory = new List<Tool>();
+    public List<Tool> inventory = new List<Tool>();
     private int maxInventorySlots = 20;
 
     private float itemCooldown = .5f;
@@ -30,6 +30,8 @@ public class ToolInventory : MonoBehaviour
     {
         AddItem(Tool.농사용일반도구);
         AddItem(Tool.일반물뿌리개);
+        AddItem(Tool.농사용고급도구);
+        AddItem(Tool.고급물뿌리개);
     }
 
     void Update()
@@ -87,27 +89,33 @@ public class ToolInventory : MonoBehaviour
         }
 
         Effect();
-
-        currentCooldown = itemCooldown;
     }
 
     public void Effect()
     {
+        if (GameManager.instance.health >= 100)
+            return;
+
         switch (inventory[select])
         {
             case Tool.농사용일반도구:
-                currentFarm.Plow();
+                if(!currentFarm.Plow(gameObject, false)) return;
+                GameManager.instance.AddHealth(2);
                 break;
             case Tool.농사용고급도구:
-                currentFarm.Plow();
+                if(!currentFarm.Plow(gameObject, true)) return;
+                GameManager.instance.AddHealth(2);
                 break;
             case Tool.일반물뿌리개:
                 currentTile.WaterTile(50);
+                GameManager.instance.AddHealth(3);
                 break;
             case Tool.고급물뿌리개:
                 currentTile.WaterTile(20);
+                GameManager.instance.AddHealth(3);
                 break;
         }
+        currentCooldown = itemCooldown;
     }
 
     void UpdateUI()

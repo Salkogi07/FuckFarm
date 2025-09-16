@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Farm : MonoBehaviour
 {
@@ -15,11 +15,39 @@ public class Farm : MonoBehaviour
     public GameObject plantModel;
     public Transform plantPos;
 
+    public MeshFilter plantFilter;
+    public Mesh[] mesh;
+
+    [Header("UI")]
+    public Image plantImage;
+
     // ¹ç °¥±â
-    public void Plow()
+    public bool Plow(GameObject obj, bool up)
     {
-        isPlowed = true;
-        UIManager.instance.ShowMsg("¹ç °¥±â");
+        if (isPlowed && stage != GrowthStage.Mature) return false;
+
+        if (hasPlant && stage == GrowthStage.Mature)
+        {
+            Item newItem = new Item(cropData, false);
+
+            int value = 1;
+            if (up)
+                value = Random.Range(1, 4);
+
+            for (int i = 0; i < value; i++)
+                obj.GetComponent<CropInventory>().AddItem(newItem);
+
+            DestoryCrop();
+            return true;
+        }
+        else
+        {
+            isPlowed = true;
+            plantFilter.mesh = mesh[1];
+            UIManager.instance.ShowMsg("¹ç °¥±â");
+
+            return true;
+        }
     }
 
     // ¾¾¾Ñ ½É±â
@@ -36,20 +64,12 @@ public class Farm : MonoBehaviour
         return true;
     }
 
-    public bool Harvest()
-    {
-        if (!hasPlant || stage != GrowthStage.Mature) return false;
-
-        DestoryCrop();
-
-        return true;
-    }
-
     public void DestoryCrop()
     {
         cropData = null;
         hasPlant = false;
         isPlowed = false;
+        plantFilter.mesh = mesh[0];
         stage = GrowthStage.Planted;
         plantTime = 0;
         Destroy(plantModel);
@@ -57,6 +77,11 @@ public class Farm : MonoBehaviour
 
     void Update()
     {
+        if(cropData != null)
+            plantImage.fillAmount = plantTime / cropData.maxPlantTime;
+        else
+            plantImage.fillAmount = 0;
+
         if (hasPlant && stage != GrowthStage.Mature)
         {
             float halfGrowthTime = cropData.maxPlantTime / 2f;

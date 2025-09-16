@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\uC625\uC218\uC218"
   m_EditorClassIdentifier: 
   seedType: 4
-  weatherState: 
+  weatherState: 00000000010000000200000003000000
   maxPlantTime: 80
   minGrowTime: 6
   maxGrowTime: 18
