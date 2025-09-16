@@ -4,11 +4,11 @@ using UnityEngine;
 
 public enum WeatherState
 {
-    Fine = 0,
-    Cloud = 1,
-    Rain = 2,
-    Storm = 3,
-    Ice = 4
+    ¸¼À½ = 0,
+    Èå¸² = 1,
+    ºñ = 2,
+    ÆøÇ³ = 3,
+    ¿ì¹Ú = 4
 }
 
 public class WeatherManager : MonoBehaviour
@@ -69,33 +69,29 @@ public class WeatherManager : MonoBehaviour
 
         switch (currentWeather)
         {
-            case WeatherState.Fine:
-                UIManager.instance.SetWeatherUI("¸¼À½");
+            case WeatherState.¸¼À½:
                 light.intensity = 1f;
                 break;
-            case WeatherState.Cloud:
-                UIManager.instance.SetWeatherUI("Èå¸²");
+            case WeatherState.Èå¸²:
                 light.intensity = 0.5f;
                 RenderSettings.fog = true;
                 break;
-            case WeatherState.Rain:
-                UIManager.instance.SetWeatherUI("ºñ");
+            case WeatherState.ºñ:
                 light.intensity = 0.5f;
                 weatherEffect[0].SetActive(true);
                 break;
-            case WeatherState.Storm:
-                UIManager.instance.SetWeatherUI("ÆøÇ³");
+            case WeatherState.ÆøÇ³:
                 light.intensity = 0.5f;
                 terrain.terrainData.wavingGrassStrength = 1f;
                 terrain.terrainData.wavingGrassAmount = 1f;
                 terrain.terrainData.wavingGrassSpeed = 1f;
                 weatherEffect[1].SetActive(true);
                 break;
-            case WeatherState.Ice:
-                UIManager.instance.SetWeatherUI("¿ì¹Ú");
+            case WeatherState.¿ì¹Ú:
                 light.intensity = 0.5f;
                 weatherEffect[2].SetActive(true);
                 break;
         }
+        UIManager.instance.SetWeatherUI(currentWeather.ToString());
     }
 }

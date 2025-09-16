@@ -10,30 +10,11 @@ public class TV : MonoBehaviour
 
     private void Update()
     {
-        string value1 = KrWeather(WeatherManager.instance.currentWeather);
-        string value2 = KrWeather(WeatherManager.instance.nextWeather);
+        string value1 = WeatherManager.instance.currentWeather.ToString();
+        string value2 = WeatherManager.instance.nextWeather.ToString();
 
         weatherText.text = $"ÀÏ±â¿¹º¸" +
             $"\r\n¿À´Ã ³¯¾¾ :{value1}" +
             $"\r\n³»ÀÏ ³¯¾¾ : {value2}";
-    }
-
-    private string KrWeather(WeatherState value)
-    {
-        switch (value)
-        {
-            case WeatherState.Fine:
-                return "¸¼À½";
-            case WeatherState.Rain:
-                return "ºñ";
-            case WeatherState.Cloud:
-                return "Èå¸²";
-            case WeatherState.Storm:
-                return "ÆøÇ³";
-            case WeatherState.Ice:
-                return "¿ì¹Ú";
-            default:
-                return "";
-        }
     }
 }

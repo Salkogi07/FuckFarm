@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71971e3efc45bf645922fd7bb42424eb, type: 3}
+  m_Name: "\uCF5C\uB9AC\uD50C\uB77C\uC6CC"
+  m_EditorClassIdentifier: 
+  seedType: 3
+  weatherState: 000000000100000002000000
+  maxPlantTime: 60
+  minGrowTime: 0
+  maxGrowTime: 24
+  minHumidity: 30
+  maxHumidity: 60
+  minPrice: 20000
+  maxPrice: 40000
+  seedModels: {fileID: 3177982295653799335, guid: d8449dba764bea44ab90269de06a50d0, type: 3}
+  growingModels: {fileID: 6421724360372590781, guid: 37774da3967f68340b832156ac4a51c8, type: 3}
+  matureModels: {fileID: 2515096759070014954, guid: 8208b668c3b954947be70fc9690eeb2a, type: 3}
