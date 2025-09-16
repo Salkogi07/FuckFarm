@@ -13,7 +13,7 @@ public class CropData : ScriptableObject
 
     public float minGrowTime, maxGrowTime;
     public float minHumidity, maxHumidity;
-    public float minPrice, maxPrice;
+    public int minPrice, maxPrice;
 
     public GameObject seedModels;
     public GameObject growingModels;

@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour
     public float maxHealth = 100;
     public float money = 3000;
 
+    public CropData[] cropDataList;
+    public int[] price;
+    public int[] lastPrice;
+
     [Header("Time")]
     public float gameDayTime = 120f;
     public float currentTime = 0;
@@ -29,6 +33,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         health = 0;
+        RandomPrice();
     }
 
     private void Update()
@@ -71,6 +76,7 @@ public class GameManager : MonoBehaviour
             weather.currentWeather = weather.nextWeather;
             weather.nextWeather = weather.SetRandomWeather();
             weather.ApplyWeather();
+            RandomPrice();
         }
 
         float timeRatio = currentTime / gameDayTime;
@@ -83,5 +89,19 @@ public class GameManager : MonoBehaviour
     {
         health += value;
         health = Mathf.Clamp(health, 0, maxHealth);
+    }
+
+    public void RandomPrice()
+    {
+        for(int i = 0; i < lastPrice.Length; i++)
+        {
+            lastPrice[i] = price[i];
+        }
+
+        for (int i = 0; i < cropDataList.Length; i++)
+        {
+            int value = Random.Range(cropDataList[i].minPrice, cropDataList[i].maxPrice);
+            price[i] = value;
+        }
     }
 }

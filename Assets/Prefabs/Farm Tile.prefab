@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1488501045704820895}
   - component: {fileID: 7765189675182557572}
   m_Layer: 0
-  m_Name: Env_FarmLand_01
+  m_Name: Farm Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
