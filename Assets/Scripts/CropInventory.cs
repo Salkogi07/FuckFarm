@@ -18,6 +18,17 @@ public class CropInventory : MonoBehaviour
 
     public Farm currentFarm;
 
+    public CropData[] startItem;
+
+
+    private void Start()
+    {
+        foreach (var item in startItem)
+        {
+            AddItem(item);
+        }
+    }
+
     void Update()
     {
         if (currentCooldown > 0)
@@ -32,7 +43,7 @@ public class CropInventory : MonoBehaviour
             image.fillAmount = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             if (currentCooldown <= 0)
             {
@@ -72,12 +83,9 @@ public class CropInventory : MonoBehaviour
             return;
         }
 
-        inventory.RemoveAt(select);
-
         Effect();
 
-        if (select >= inventory.Count && inventory.Count > 0)
-            select = inventory.Count - 1;
+        select = 0;
 
         currentCooldown = itemCooldown;
     }
@@ -85,17 +93,15 @@ public class CropInventory : MonoBehaviour
     public void Effect()
     {
         currentFarm.PlantSeed(inventory[select]);
+        inventory.RemoveAt(select);
     }
 
     void UpdateUI()
     {
         if (inventory.Count == 0)
-        {
             text.text = string.Empty;
-            return;
-        }
-
-        text.text = inventory[select].seedType.ToString();
+        else
+            text.text = inventory[select].seedType.ToString();
     }
 
     private void OnTriggerStay(Collider other)

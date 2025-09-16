@@ -46,7 +46,7 @@ public class ToolInventory : MonoBehaviour
             image.fillAmount = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             if (currentCooldown <= 0)
             {
@@ -113,12 +113,9 @@ public class ToolInventory : MonoBehaviour
     void UpdateUI()
     {
         if (inventory.Count == 0)
-        {
             text.text = string.Empty;
-            return;
-        }
-
-        text.text = inventory[select].ToString();
+        else
+            text.text = inventory[select].ToString();
     }
 
     private void OnTriggerStay(Collider other)

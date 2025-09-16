@@ -6120,7 +6120,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Change : Ctrl
 
-    Use : X'
+    Use : Z'
 --- !u!222 &167508892
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12747,6 +12747,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 1912928716}
   text: {fileID: 1186745767}
+  currentFarm: {fileID: 0}
+  startItem:
+  - {fileID: 11400000, guid: d3a21b14c0b2323498994b57fe68ea9e, type: 2}
+  - {fileID: 11400000, guid: 21d323197e4d59b47929c37f44168e9e, type: 2}
+  - {fileID: 11400000, guid: 6f0ae1f231348b545a55bf3b185d9168, type: 2}
 --- !u!114 &585374783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12761,6 +12766,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 469329769}
   text: {fileID: 1165981659}
+  currentFarm: {fileID: 0}
+  currentTile: {fileID: 0}
 --- !u!1 &607294971
 GameObject:
   m_ObjectHideFlags: 0
@@ -34417,7 +34424,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Change : Shift
 
-    Use : Z'
+    Use : X'
 --- !u!222 &1217632845
 CanvasRenderer:
   m_ObjectHideFlags: 0
