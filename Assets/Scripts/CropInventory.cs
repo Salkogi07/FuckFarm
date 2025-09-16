@@ -3,32 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum Crop
-{
-    ´ç±Ù¾¾¾Ñ,
-    ºê·ÎÄÝ¸®¾¾¾Ñ,
-    ÄÝ¸®ÇÃ¶ó¿ö¾¾¾Ñ,
-    ¿Á¼ö¼ö¾¾¾Ñ,
-    ÇØ¹Ù¶ó±â¾¾¾Ñ
-}
-
 public class CropInventory : MonoBehaviour
 {
-    public class Item
-    {
-        public Tool type;
-    }
-
     public Image image;
     public Text text;
 
-    private List<Item> inventory = new List<Item>();
+    private List<CropData> inventory = new List<CropData>();
     private int maxInventorySlots = 20;
 
     private float itemCooldown = .5f;
     private float currentCooldown = 0f;
 
     private int select = 0;
+
+    public Farm currentFarm;
 
     void Update()
     {
@@ -69,11 +57,10 @@ public class CropInventory : MonoBehaviour
         UpdateUI();
     }
 
-    public void AddItem(Tool itemType)
+    public void AddItem(CropData newItem)
     {
         if (inventory.Count < maxInventorySlots)
         {
-            Item newItem = new Item { type = itemType };
             inventory.Add(newItem);
         }
     }
@@ -87,10 +74,17 @@ public class CropInventory : MonoBehaviour
 
         inventory.RemoveAt(select);
 
+        Effect();
+
         if (select >= inventory.Count && inventory.Count > 0)
             select = inventory.Count - 1;
 
         currentCooldown = itemCooldown;
+    }
+
+    public void Effect()
+    {
+        currentFarm.PlantSeed(inventory[select]);
     }
 
     void UpdateUI()
@@ -101,6 +95,22 @@ public class CropInventory : MonoBehaviour
             return;
         }
 
-        text.text = inventory[select].type.ToString();
+        text.text = inventory[select].seedType.ToString();
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.tag == "Farm")
+        {
+            currentFarm = other.GetComponent<Farm>();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Farm")
+        {
+            currentFarm = null;
+        }
     }
 }
