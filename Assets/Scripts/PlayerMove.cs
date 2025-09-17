@@ -14,6 +14,8 @@ public class PlayerMove : MonoBehaviour
     public Vector3 targetPositon;
     public bool hasTarget = false;
 
+    public bool isMove = true;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -23,6 +25,9 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        if (!isMove)
+            return;
+
         if(Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

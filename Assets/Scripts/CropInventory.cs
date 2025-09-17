@@ -87,6 +87,8 @@ public class CropInventory : MonoBehaviour
         if (inventory.Count < maxInventorySlots)
         {
             inventory.Add(newItem);
+            InventoryUI.Instance.RefreshUI();
+            StorageUI.Instance.RefreshUI();
         }
     }
 
@@ -107,6 +109,8 @@ public class CropInventory : MonoBehaviour
             return;
 
         inventory.RemoveAt(select);
+        InventoryUI.Instance.RefreshUI();
+        StorageUI.Instance.RefreshUI();
         select = 0;
         currentCooldown = itemCooldown;
     }

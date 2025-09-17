@@ -9,7 +9,7 @@ public class Store : MonoBehaviour
         {
             GameManager.instance.money -= price;
             Item newItem = new Item(crop, true);
-            //Storage.instance.AddToStorage(newItem);
+            Storage.instance.AddToStorage(newItem);
             Debug.Log($"{crop.seedType} 씨앗을 구매하여 창고에 저장했습니다!");
         }
         else
