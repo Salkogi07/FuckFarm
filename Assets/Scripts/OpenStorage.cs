@@ -12,15 +12,29 @@ public class OpenStorage : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                panel.SetActive(true);
+            player = other.gameObject;
+        }
+    }
 
-                player = other.gameObject;
-                player.GetComponent<PlayerMove>().hasTarget = false;
-                player.GetComponent<PlayerMove>().animator.Play("Idle");
-                player.GetComponent<PlayerMove>().isMove = false;
-            }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            player = null;
+        }
+    }
+
+    private void Update()
+    {
+        if (player == null)
+            return;
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            panel.SetActive(true);
+
+            player.GetComponent<PlayerMove>().hasTarget = false;
+            player.GetComponent<PlayerMove>().animator.Play("Idle");
+            player.GetComponent<PlayerMove>().isMove = false;
         }
     }
 

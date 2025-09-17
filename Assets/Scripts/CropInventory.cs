@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,27 +7,25 @@ using UnityEngine.UI;
 public class Item
 {
     public CropData data;
-    public bool IsSeed = false;
+    public bool IsSeed;
 
-    public Item(CropData data , bool value)
+    public Item(CropData data, bool isSeed)
     {
         this.data = data;
-        this.IsSeed = value;
+        this.IsSeed = isSeed;
     }
 }
 
 public class CropInventory : MonoBehaviour
 {
     public List<Item> inventory = new List<Item>();
-    private int maxInventorySlots = 20;
+    [SerializeField] private int maxInventorySlots = 20;
+    [SerializeField] private float itemCooldown = .5f;
 
-    private float itemCooldown = .5f;
-    private float currentCooldown = 0f;
-
-    private int select = 0;
+    private float currentCooldown;
+    private int select;
 
     public Farm currentFarm;
-
     public Item[] startItem;
 
     [Header("UI")]
@@ -37,109 +34,80 @@ public class CropInventory : MonoBehaviour
 
     private void Start()
     {
-        foreach (var item in startItem)
-        {
-            AddItem(item);
-        }
+        foreach (var item in startItem) AddItem(item);
     }
 
-    void Update()
+    private void Update()
+    {
+        UpdateCooldownUI();
+        HandleInput();
+        UpdateUI();
+    }
+
+    void UpdateCooldownUI()
     {
         if (currentCooldown > 0)
         {
             currentCooldown -= Time.deltaTime;
-
-            float fill = currentCooldown / itemCooldown;
-            image.fillAmount = fill;
+            image.fillAmount = currentCooldown / itemCooldown;
         }
-        else
-        {
-            image.fillAmount = 0;
-        }
+        else image.fillAmount = 0;
+    }
 
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            if (currentCooldown <= 0)
-            {
-                UseItem();
-            }
-        }
-
+    void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Z) && currentCooldown <= 0) UseItem();
         if (Input.GetKey(KeyCode.LeftControl) && inventory.Count > 0)
-        {
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            ScrollSelect(Input.GetAxis("Mouse ScrollWheel"));
+    }
 
-            if (scroll < 0) // ÈÙ ¾Æ·¡·Î
-            {
-                select = (select + 1) % inventory.Count;
-            }
-            if (scroll > 0) // ÈÙ À§·Î
-            {
-                select = (select - 1 + inventory.Count) % inventory.Count;
-            }
-        }
-
-        UpdateUI();
+    void ScrollSelect(float scroll)
+    {
+        if (scroll == 0) return;
+        select = (select + (scroll < 0 ? 1 : -1) + inventory.Count) % inventory.Count;
     }
 
     public void AddItem(Item newItem)
     {
-        if (inventory.Count < maxInventorySlots)
-        {
-            inventory.Add(newItem);
-            InventoryUI.Instance.RefreshUI();
-            StorageUI.Instance.RefreshUI();
-        }
+        if (inventory.Count >= maxInventorySlots) return;
+        inventory.Add(newItem);
+        InventoryUI.Instance.RefreshUI();
+        StorageUI.Instance.RefreshUI();
     }
 
     void UseItem()
     {
-        if (inventory.Count == 0)
-            return;
-
+        if (inventory.Count == 0) return;
         Effect();
     }
 
-    public void Effect()
+    void Effect()
     {
-        if (!inventory[select].IsSeed)
-            return;
-
-        if (!currentFarm.PlantSeed(inventory[select].data))
-            return;
+        var item = inventory[select];
+        if (!item.IsSeed || !currentFarm.PlantSeed(item.data)) return;
 
         inventory.RemoveAt(select);
-        InventoryUI.Instance.RefreshUI();
-        StorageUI.Instance.RefreshUI();
         select = 0;
         currentCooldown = itemCooldown;
+
+        InventoryUI.Instance.RefreshUI();
+        StorageUI.Instance.RefreshUI();
     }
 
     void UpdateUI()
     {
-        if (inventory.Count == 0)
-            text.text = string.Empty;
-        else
-        {
-            text.text = inventory[select].data.seedType.ToString();
-            if (inventory[select].IsSeed)
-                text.text += "¾¾¾Ñ";
-        }
+        if (inventory.Count == 0) { text.text = ""; return; }
+        var item = inventory[select];
+        text.text = $"{item.data.seedType}{(item.IsSeed ? "¾¾¾Ñ" : "")}";
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.tag == "Farm")
-        {
-            currentFarm = other.GetComponent<Farm>();
-        }
+        if (other.CompareTag("Farm")) currentFarm = other.GetComponent<Farm>();
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Farm")
-        {
-            currentFarm = null;
-        }
+        if (other.CompareTag("Farm")) currentFarm = null;
     }
 }
