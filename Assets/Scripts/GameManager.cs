@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,8 +23,12 @@ public class GameManager : MonoBehaviour
     public int hour = 0;
     public int minute = 0;
 
+    public float score = 0;
+
     public bool IsTimeUp = false;
     public bool IsPause = false;
+
+    public bool isScore = true;
 
     private void Awake()
     {
@@ -38,6 +43,12 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (isScore)
+        {
+            score += Time.unscaledDeltaTime;
+        }
+
+
         GameTime();
 
         if (Input.GetKeyDown(KeyCode.F1))

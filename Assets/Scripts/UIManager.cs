@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -12,6 +13,11 @@ public class UIManager : MonoBehaviour
 
     public Text timeText, dayText, weatherText, moneyText, healthText;
     public Image moneyImage, healthImage;
+
+    [Header("Rank")]
+    public GameObject rankSavePanel;
+    public InputField field;
+    public Text score;
 
     private void Awake()
     {
@@ -27,6 +33,19 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if(GameManager.instance.money >= 1000000)
+        {
+            rankSavePanel.SetActive(true);
+            GameManager.instance.isScore = false;
+
+            int time = (int)GameManager.instance.score;
+
+            float m = time / 60;
+            float s = time % 60;
+
+            score.text = "Time:" + m.ToString("D2") + ":" + s.ToString("D2");
+        }
+
         UpdateHealthUI();
         UpdateMoneyUI();
         UpdateTimeUI();
@@ -91,5 +110,14 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         obj.SetActive(false);
+    }
+
+    public void SaveRankScore()
+    {
+        if (field.text == "")
+            return;
+
+        int time = (int)GameManager.instance.score;
+        RankingManager.Instance.AddScore(time, field.text);
     }
 }
