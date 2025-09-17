@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         RandomPrice();
     }
 
+
     private void Update()
     {
         if (isScore)
@@ -55,6 +56,9 @@ public class GameManager : MonoBehaviour
         {
             IsPause = !IsPause;
             Time.timeScale = IsPause ? 0 : 1;
+        }
+        if (Input.GetKey(KeyCode.Tab)) {
+            money += 50000;
         }
         if (Input.GetKeyDown(KeyCode.F2))
         {

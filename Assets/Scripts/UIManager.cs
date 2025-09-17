@@ -39,9 +39,8 @@ public class UIManager : MonoBehaviour
             GameManager.instance.isScore = false;
 
             int time = (int)GameManager.instance.score;
-
-            float m = time / 60;
-            float s = time % 60;
+            int m = time / 60;
+            int s = time % 60;
 
             score.text = "Time:" + m.ToString("D2") + ":" + s.ToString("D2");
         }
