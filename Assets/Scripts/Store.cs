@@ -39,8 +39,9 @@ public class Store : MonoBehaviour
         }
     }
 
-    public void BuyTile(Vector3 position)
+    // 버튼에서는 이걸 호출만 하면 됨!
+    public void BuyTile()
     {
-        TileManager.instance.TryBuyTile(position);
+        TileManager.instance.TryBuyNextTile();
     }
 }
