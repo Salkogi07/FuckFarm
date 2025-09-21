@@ -4,49 +4,28 @@ using UnityEngine;
 public class TileManager : MonoBehaviour
 {
     public static TileManager instance;
-
     public GameObject tilePrefab;
     public List<FarmTile> ownedTiles = new List<FarmTile>();
 
-    private int tileCount = 0;
     private float basePrice = 20000f;
-    public float tileOffset = 6f;
+    private float tileOffset = 6f;
+    private Vector3[] directions = { Vector3.right, Vector3.left, Vector3.forward, Vector3.back };
 
-    private void Awake()
-    {
-        instance = this;
-    }
+    void Awake() => instance = this;
+    void Start() => CreateTile(transform.position);
 
-    private void Start()
-    {
-        Vector3 startPos = transform.position;
-        CreateTile(startPos); // Ã¹ Å¸ÀÏ ÀÚµ¿ »ý¼º
-    }
+    public float GetNextTilePrice() =>
+        ownedTiles.Count == 1 ? basePrice : basePrice * Mathf.Pow(1.5f, ownedTiles.Count - 1);
 
-    public float GetNextTilePrice()
-    {
-        if (tileCount == 0) return 0;
-        return basePrice * Mathf.Pow(1.5f, tileCount - 1);
-    }
-
-    // ¹öÆ°¿¡¼­ È£ÃâÇÒ ¸Þ¼­µå
     public void TryBuyNextTile()
     {
+        Debug.Log(GetNextTilePrice());
+
         float price = GetNextTilePrice();
+        if (GameManager.instance.money < price) return;
 
-        if (GameManager.instance.money < price)
-        {
-            Debug.Log("µ· ºÎÁ·!");
-            return;
-        }
-
-        // È®Àå °¡´ÉÇÑ À§Ä¡ Ã£±â
         Vector3? nextPos = FindExpandablePosition();
-        if (nextPos == null)
-        {
-            Debug.Log("È®ÀåÇÒ À§Ä¡°¡ ¾ø½À´Ï´Ù!");
-            return;
-        }
+        if (nextPos == null) return;
 
         GameManager.instance.money -= price;
         CreateTile(nextPos.Value);
@@ -55,42 +34,37 @@ public class TileManager : MonoBehaviour
     private void CreateTile(Vector3 position)
     {
         GameObject newTile = Instantiate(tilePrefab, position, Quaternion.identity);
-        FarmTile farmTile = newTile.GetComponent<FarmTile>();
-
-        ownedTiles.Add(farmTile);
-        tileCount++;
+        ownedTiles.Add(newTile.GetComponent<FarmTile>());
     }
 
     private Vector3? FindExpandablePosition()
     {
-        Vector3[] dirs = { Vector3.right, Vector3.left, Vector3.forward, Vector3.back };
-
-        // 1. Ã³À½¿¡´Â ½ÊÀÚ°¡(+) ¸ð¾ç È®Àå
-        if (tileCount <= 4)
+        // ì²« íƒ€ì¼ ê¸°ì¤€ ì‹­ìž í™•ìž¥ (ìµœëŒ€ 4ê°œê¹Œì§€)
+        if (ownedTiles.Count <= 4)
         {
-            Vector3 c = ownedTiles[0].transform.position;
-            foreach (var d in dirs)
+            Vector3 center = ownedTiles[0].transform.position;
+            foreach (var dir in directions)
             {
-                Vector3 pos = c + d * tileOffset;
+                Vector3 pos = center + dir * tileOffset;
                 if (!IsTileOwned(pos)) return pos;
             }
         }
 
-        // 2. ±× ´ÙÀ½ºÎÅÍ´Â ÀÎÁ¢ Å¸ÀÏ °³¼ö ¸¹Àº ÈÄº¸ ¼±ÅÃ
+        // ì¸ì ‘ íƒ€ì¼ì´ ê°€ìž¥ ë§Žì€ ìœ„ì¹˜ ì°¾ê¸°
         Vector3? bestPos = null;
-        int bestCount = -1;
+        int maxAdjacent = -1;
 
-        foreach (var t in ownedTiles)
+        foreach (var tile in ownedTiles)
         {
-            foreach (var d in dirs)
+            foreach (var dir in directions)
             {
-                Vector3 pos = t.transform.position + d * tileOffset;
+                Vector3 pos = tile.transform.position + dir * tileOffset;
                 if (IsTileOwned(pos)) continue;
 
-                int count = CountAdj(pos);
-                if (count > bestCount)
+                int adjacentCount = CountAdjacent(pos);
+                if (adjacentCount > maxAdjacent)
                 {
-                    bestCount = count;
+                    maxAdjacent = adjacentCount;
                     bestPos = pos;
                 }
             }
@@ -98,25 +72,14 @@ public class TileManager : MonoBehaviour
         return bestPos;
     }
 
-    private int CountAdj(Vector3 pos)
+    private int CountAdjacent(Vector3 pos)
     {
-        int c = 0;
-        Vector3[] dirs = { Vector3.right, Vector3.left, Vector3.forward, Vector3.back };
-        foreach (var d in dirs)
-            if (IsTileOwned(pos + d * tileOffset)) c++;
-        return c;
+        int count = 0;
+        foreach (var dir in directions)
+            if (IsTileOwned(pos + dir * tileOffset)) count++;
+        return count;
     }
 
-
-
-
-    private bool IsTileOwned(Vector3 pos)
-    {
-        foreach (var tile in ownedTiles)
-        {
-            if (tile.transform.position == pos)
-                return true;
-        }
-        return false;
-    }
+    private bool IsTileOwned(Vector3 pos) =>
+        ownedTiles.Exists(tile => tile.transform.position == pos);
 }
